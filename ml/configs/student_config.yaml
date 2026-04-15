@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════════════════════
+# Phase 2: DeiT-Tiny Student Training Configuration
+# Owner: Yashraj Shrestha
+# Run: python ml/scripts/train_student.py
+# ═══════════════════════════════════════════════════════════
+
+model:
+  name: deit_tiny_distilled_patch16_224
+  num_classes: 15
+  pretrained: false         # Train from scratch via distillation
+  patch_size: 16
+  image_size: 224
+
+teacher:
+  model_path: models/teacher/resnet50_plant_teacher.pth  # Must be trained first
+  model_name: resnet50
+
+distillation:
+  alpha: 0.7                # Weight for soft label loss (70% teacher, 30% hard)
+  temperature: 4.0          # Hinton et al. (2015): T=4 optimal for most tasks
+  # alpha=0.7, T=4.0 from: Touvron et al. (2021) DeiT training
+
+data:
+  root_dir: data/raw/PlantVillage
+  input_size: 224
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  num_workers: 2
+
+training:
+  batch_size: 32            # Fits T4 GPU (16GB)
+  num_epochs: 50
+  early_stopping_patience: 10
+
+optimizer:
+  name: adamw
+  learning_rate: 0.0001     # Lower LR for stable distillation
+  weight_decay: 0.05        # Higher weight decay for transformers
+
+scheduler:
+  name: cosine_annealing
+  T_max: 50
+
+output:
+  save_dir: models/student/
+  model_name: deit_tiny_plant_diagnosis.pth
+  log_dir: ml/logs/student/

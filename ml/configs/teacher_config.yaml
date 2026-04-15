@@ -1,0 +1,42 @@
+# ═══════════════════════════════════════════════════════════
+# Phase 1: ResNet-50 Teacher Training Configuration
+# Owner: Yashraj Shrestha
+# Run: python ml/scripts/train_teacher.py
+# ═══════════════════════════════════════════════════════════
+
+model:
+  name: resnet50
+  num_classes: 15
+  pretrained: true          # ImageNet pretrained weights
+  freeze_backbone: false    # Fine-tune all layers
+
+data:
+  root_dir: data/raw/PlantVillage
+  input_size: 224
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  num_workers: 2
+
+training:
+  batch_size: 32
+  num_epochs: 30
+  early_stopping_patience: 7
+  label_smoothing: 0.1      # Reduces overconfidence
+
+optimizer:
+  name: adamw
+  learning_rate: 0.001
+  weight_decay: 0.01
+
+scheduler:
+  name: reduce_on_plateau
+  mode: max                 # Maximize validation accuracy
+  factor: 0.1
+  patience: 5
+
+output:
+  save_dir: models/teacher/
+  model_name: resnet50_plant_teacher.pth
+  log_dir: ml/logs/teacher/

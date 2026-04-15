@@ -1,0 +1,43 @@
+# ═══════════════════════════════════════════════════════════
+#  Secure-Plants_Diagnosis — Backend Dependencies
+#  Install: pip install -r requirements.txt
+# ═══════════════════════════════════════════════════════════
+
+# ── FastAPI & Server ─────────────────────────────────────────
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6        # Required for file uploads
+httpx==0.25.2                  # Async HTTP client (for testing)
+
+# ── Authentication & Security ────────────────────────────────
+python-jose[cryptography]==3.3.0   # JWT tokens
+passlib[bcrypt]==1.7.4             # Password hashing
+cryptography==41.0.7               # TLS/encryption utilities
+
+# ── Database ─────────────────────────────────────────────────
+sqlalchemy==2.0.23                 # ORM
+psycopg2-binary==2.9.9             # PostgreSQL adapter
+alembic==1.13.0                    # Database migrations
+
+# ── ML / Image Processing ────────────────────────────────────
+torch==2.1.2                       # PyTorch (inference)
+torchvision==0.16.2                # Image transforms
+timm==0.9.12                       # DeiT-Tiny model
+Pillow==10.1.0                     # Image loading
+numpy==1.26.2                      # Numerical operations
+
+# ── Configuration ────────────────────────────────────────────
+python-dotenv==1.0.0               # .env file loading
+pydantic==2.5.2                    # Data validation
+pydantic-settings==2.1.0           # Settings from env vars
+
+# ── Rate Limiting ────────────────────────────────────────────
+slowapi==0.1.9                     # FastAPI rate limiting
+
+# ── Logging ──────────────────────────────────────────────────
+loguru==0.7.2                      # Better logging
+
+# ── Testing ──────────────────────────────────────────────────
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0

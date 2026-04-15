@@ -1,0 +1,68 @@
+# ═══════════════════════════════════════════════════════════
+#  Secure-Plants_Diagnosis — Docker Compose
+#  Services: FastAPI Backend + PostgreSQL Database
+#  Usage: docker-compose up --build
+# ═══════════════════════════════════════════════════════════
+
+version: '3.9'
+
+services:
+
+  # ── PostgreSQL Database ─────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: plant_diagnosis_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-plant_diagnosis_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-plant_diagnosis_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - plant_network
+
+  # ── FastAPI Backend ─────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: plant_diagnosis_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    ports:
+      - "${PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - ./models:/app/models:ro       # Read-only model weights
+      - backend_logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - plant_network
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# ── Volumes ────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    name: plant_diagnosis_postgres_data
+  backend_logs:
+    name: plant_diagnosis_backend_logs
+
+# ── Networks ───────────────────────────────────────────────────
+networks:
+  plant_network:
+    name: plant_diagnosis_network
+    driver: bridge
