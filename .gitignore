@@ -1,0 +1,79 @@
+# ═══════════════════════════════════════════
+# Secure-Plants_Diagnosis — .gitignore
+# ═══════════════════════════════════════════
+
+# ── Environment & Secrets ─────────────────
+.env
+.env.local
+*.pem
+*.key
+*.cert
+
+# ── Python ────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# ── ML Model Weights (too large for Git) ──
+models/teacher/*.pth
+models/teacher/*.pt
+models/student/*.pth
+models/student/*.pt
+*.h5
+*.pkl
+
+# ── Datasets (too large for Git) ──────────
+data/raw/
+data/processed/
+data/splits/
+PlantVillage/
+PlantDoc/
+*.zip
+*.tar.gz
+
+# ── Jupyter Notebooks Outputs ─────────────
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# ── Flutter / Dart ────────────────────────
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/Pods/
+mobile/ios/Podfile.lock
+
+# ── ML Training Logs ─────────────────────
+ml/runs/
+ml/logs/
+wandb/
+
+# ── Docker ────────────────────────────────
+pgdata/
+
+# ── IDEs ──────────────────────────────────
+.idea/
+.vscode/
+*.swp
+
+# ── macOS ─────────────────────────────────
+.DS_Store
+
+# ── Windows ───────────────────────────────
+Thumbs.db
+Desktop.ini
+
+# ── Logs ──────────────────────────────────
+*.log
+logs/
+backend/uploads/
